@@ -10,4 +10,4 @@ This is a piece of software that will collect twitter data and use it for resear
 
 ## Dependancies
 1. Tweepy - http://www.tweepy.org/
-  <code>sudo pip install --ignore-installed tweepy</code>
+  <code>sudo pip install --ignore-installed tweepy</code> or in PyCharm IDE <code> Preferences -> Project -> Project Interpreter -> + (Install) -> Type in tweepy and install</code>
