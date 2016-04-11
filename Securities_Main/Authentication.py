@@ -1,8 +1,8 @@
 class Auth:
-    customerKey = 'f4wWpBfkIb9NaaSBWDRiT3Bha'
-    cutomerSecret = 'Q1IB43asORppdBg1rQv18lMBzB2c8buG6rOtsUXOY7gRDH3TxD'
-    accessToken = '334646874-gKOzdJiD7iLag7HooKY6F3yUt9fOk4OR3KoZCR5X'
-    accessSecret = '56YjvVrXKfjBx19LrRj93UH14TN1m0IdCY658ZvU4vims'
+    customerKey = '84LWQRzaQG3OJvbuVFtY1sOMd'
+    cutomerSecret = 'Vfrau3hKKpxNquSZ7x7QEJdTOA97B9ef4fUAyN8LbWs24K9O2X'
+    accessToken = '719446131428732928-lG05qNfdYU1Qe6RFbn0Qo1FEDiL59nf'
+    accessSecret = '7uda0Jf5FizPaTchx2Y54KvLSk5AwVzTIysTEFXD39nQO'
 
     def __init__(self):
         return None
