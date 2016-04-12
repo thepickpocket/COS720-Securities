@@ -2,11 +2,15 @@ from tweepy.streaming import StreamListener
 from tweepy import OAuthHandler
 from tweepy import Stream
 from Authentication import Auth
+from TIKMongoDriver import MongoDriver
 
+Database = None
 
 class StdOutListener(StreamListener):
 
     def on_data(self, data):
+        global Database
+        #Database.saveData(data)
         print data
         return True
 
@@ -16,6 +20,8 @@ class StdOutListener(StreamListener):
 
 class TwitterStream:
     def __init__(self):
+        global Database #Declares variable to be the global reference
+        Database = MongoDriver()
         return None
 
     def getStream(self):
