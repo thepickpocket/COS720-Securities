@@ -2,7 +2,5 @@
 # Assignment by Jason R. Evans 13032608 & Vivian L. Venter 13238435
 
 import sys
-from Twitter_Streaming import TwitterStream
+from pymongo import mongo_client
 
-twit = TwitterStream()
-twit.getStream()
