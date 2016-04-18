@@ -74,8 +74,9 @@ def cleanupContent(data):
 
 def CreateWordcloud():
     global DATA
-    tags = make_tags(DATA)
+    tags = make_tags(get_tag_counts(DATA))
     create_tag_image(tags, 'tester-image.png', size=(900, 600), fontname='Lobster')
+
 
 ##Main implementation
 
