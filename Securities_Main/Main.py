@@ -4,14 +4,18 @@
 import sys
 import re
 import HTMLParser
+from pytagcloud import create_tag_image, make_tags
+from pytagcloud.lang.counter import get_tag_counts
 from pymongo import MongoClient
+
+DATA = unicode("")
 
 ##Helper Functions
 def cleanupContent(data):
     count = 0
     htmlParser = HTMLParser.HTMLParser()
 
-    for tweet in allData:
+    for tweet in data:
         '''
         ### Escaping HTML Characters ###
         '''
@@ -61,10 +65,17 @@ def cleanupContent(data):
             escapedContent = escapedContent.strip()
 
         print(escapedContent)
+        global DATA
+        DATA = DATA + unicode(escapedContent)
 
         count = count + 1
         if count == 10:
             break
+
+def CreateWordcloud():
+    global DATA
+    tags = make_tags(DATA)
+    create_tag_image(tags, 'tester-image.png', size=(900, 600), fontname='Lobster')
 
 ##Main implementation
 
@@ -74,6 +85,7 @@ collection = db['TwitterData']
 allData = collection.find({})
 
 cleanupContent(allData)
+CreateWordcloud()
 
 
 dbClient.close()
