@@ -2,7 +2,7 @@
 A data science experiment to detect identity deception of online profiles.
 
 ## Contributors (Group 14)
-Jason Richard Evans - 13032608
+Jason Richard Evans - 13032608 <br/>
 Vivian Venter - 13238435
 
 ## Technologies
@@ -16,7 +16,7 @@ Vivian Venter - 13238435
 4. pytagcloud - https://pypi.python.org/pypi/pytagcloud
 
 ## Data Import
-The following techniques were used to extract the given data from a csv file into MongoDB:
+The following techniques were used to extract the given data from a csv file into MongoDB:<br/>
 1. Changing the encoding of the file from Latin1 to UTF-8
 2. Properly escaping quotation marks ("" instead of \")
 
@@ -37,3 +37,4 @@ The following techniques were used to extract the given data from a csv file int
 
 ## Experimentation of Data
 1. Copy from existing database 'TwitterData' using mongodb command <code>db.TwitterData.copyTo('NewCollectionName')</code>
+2. Remove Redundant Columbs with <code>db.domain.update({},{$unset: {columnName:1}},{multi: true})</code>
