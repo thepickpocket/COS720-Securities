@@ -1,3 +1,7 @@
+# COS 720 Securities
+# Assignment by Jason R. Evans 13032608 & Vivian L. Venter 13238435
+# Project 14
+
 class StopWords:
     Words = [
         "a", "about", "above", "after", "again", "against", "all", "am", "an", "and", "any", "are", "aren't",

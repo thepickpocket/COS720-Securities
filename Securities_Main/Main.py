@@ -2,10 +2,9 @@
 # Assignment by Jason R. Evans 13032608 & Vivian L. Venter 13238435
 # Project 14
 
-from pytagcloud import create_tag_image, make_tags, LAYOUTS
-from pytagcloud.lang.counter import get_tag_counts
 from pymongo import MongoClient
 from DataCleanup import Cleanup
+from WordClouds import WordCloud
 
 DATA = unicode("")
 
@@ -31,11 +30,11 @@ def cleanupContent(data):
         if count == 50:
             break
 
-def CreateWordcloud():
-    global DATA
-    tags = make_tags(get_tag_counts(DATA))
-    create_tag_image(tags, 'image.png', size=(900, 600), background=(0, 0, 0, 0), fontname='Lobster')
-
+def getLocations(data):
+    locations = unicode("")
+    for tweet in data:
+        locations += tweet['Location'] ##TODO Just get the correct name of the column
+    return locations
 
 ##Main implementation
 
@@ -45,7 +44,8 @@ collection = db['TwitterData']
 allData = collection.find({})
 
 cleanupContent(allData)
-CreateWordcloud()
+WordCloud.CreateWordcloud(DATA)
+WordCloud.CreateWordcloud(getLocations(allData))
 
 
 dbClient.close()
