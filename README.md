@@ -35,3 +35,5 @@ The following techniques were used to extract the given data from a csv file int
 4. Translator
 5. isFriend/isFollower
 
+## Experimentation of Data
+1. Copy from existing database 'TwitterData' using mongodb command <code>db.TwitterData.copyTo('NewCollectionName')</code>
