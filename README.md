@@ -17,7 +17,7 @@ Vivian Venter - 13238435
 
 ## Data Import
 The following techniques were used to extract the given data from a csv file into MongoDB:<br/>
-1. Changing the encoding of the file from Latin1 to UTF-8
+1. Changing the encoding of the file from Latin1 to UTF-8 <br/>
 2. Properly escaping quotation marks ("" instead of \")
 
 ## Data Cleaning Techniques
