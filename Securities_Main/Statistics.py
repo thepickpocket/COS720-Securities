@@ -24,6 +24,18 @@ class Statistics:
             )
         ]
         plot_url = plt.plot(data, filename='LanguageStats')
+        print plot_url
+
+        base.pop(0)
+        values.pop(0)
+
+        data = [
+            go.Bar(
+                x=base,
+                y=values
+            )
+        ]
+        plot_url = plt.plot(data, filename='LanguageStatsWithoutEnglish')
 
         print plot_url
 
