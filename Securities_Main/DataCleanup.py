@@ -29,7 +29,7 @@ class Cleanup:
     '''
     def RemovePunctuation(self, line):
         print line
-        line.translate(None, ''.join(self.Punctuation))
+        line.translate(None, ''.join(StopWords().Punctuation))
         print line
         return line
 
