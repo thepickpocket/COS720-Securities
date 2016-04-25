@@ -7,6 +7,8 @@ import re
 from StoppingWords import StopWords
 
 class Cleanup:
+    Punctuation = [".", "!", "?", ":", ";", ",", "-", "(", ")", "'", "\""]
+
     def __init__(self):
         return None
 
@@ -23,6 +25,16 @@ class Cleanup:
     def NonPrintableChars(self, line):
         stripped = lambda s: "".join(i for i in s if 31 < ord(i) < 127)
         return stripped(line)
+
+    '''
+    ### Removing of punctuation ###
+    '''
+
+    def RemovePunctuation(self, line):
+        print line
+        line.translate(None, ''.join(self.Punctuation))
+        print line
+        return line
 
     '''
     ### Changing all letters to lowercase letters ###
