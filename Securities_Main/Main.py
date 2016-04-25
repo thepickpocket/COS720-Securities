@@ -19,10 +19,10 @@ def cleanupContent(data):
         text = Cleanup().NonPrintableChars(text)
         text = Cleanup().ToLowercase(text)
         text = Cleanup().RemoveLinks(text)
+        text = Cleanup().RemovePunctuation(text)
         text = Cleanup().RemoveMentions(text)
         text = Cleanup().RemoveStopWords(text)
-        text = Cleanup().RemovePunctuation(text)
-
+        print text
         global DATA
         DATA = DATA + unicode(text)
 
