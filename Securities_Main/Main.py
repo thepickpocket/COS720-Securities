@@ -22,7 +22,7 @@ def cleanupContent(data):
         text = Cleanup().RemovePunctuation(text)
         text = Cleanup().RemoveMentions(text)
         text = Cleanup().RemoveStopWords(text)
-        print text
+
         global DATA
         DATA = DATA + unicode(text)
 
