@@ -61,11 +61,11 @@ while True:
         break
     elif input == '1':
         print("Creating word cloud from twitter content data...")
-        WordCloud.CreateWordcloud(DATA, 'image.png')
+        WordCloud.CreateWordcloud(DATA, '../images/image.png')
         print("Word cloud created.")
     elif input == '2':
         print("Creating word cloud on locations..")
-        WordCloud().CreateWordcloud(getLocations(allData), 'locations.png')
+        WordCloud().CreateWordcloud(getLocations(allData), '../images/locations.png')
         print("Word cloud created.")
     elif input == '3':
         print("Generating statistics on language of twitter posts...")
