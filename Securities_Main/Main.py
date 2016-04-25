@@ -62,7 +62,6 @@ while True:
     elif input == '1':
         print("Creating word cloud from twitter content data...")
         global DATA
-        cleanupContent(allData)
         WordCloud.CreateWordcloud(DATA, '../images/image.png')
         print("Word cloud created.")
     elif input == '2':
