@@ -29,9 +29,9 @@ class Cleanup:
     '''
     def RemovePunctuation(self, line):
         print line
-        line.translate(None, ''.join(StopWords().Punctuation))
-        print line
-        return line
+        out = "".join(c for c in line if c not in StopWords().Punctuation)
+        print out
+        return out
 
     '''
     ### Changing all letters to lowercase letters ###
