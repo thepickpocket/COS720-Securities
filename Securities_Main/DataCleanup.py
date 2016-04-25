@@ -7,8 +7,6 @@ import re
 from StoppingWords import StopWords
 
 class Cleanup:
-    Punctuation = [".", "!", "?", ":", ";", ",", "-", "(", ")", "'", "\""]
-
     def __init__(self):
         return None
 
@@ -29,7 +27,6 @@ class Cleanup:
     '''
     ### Removing of punctuation ###
     '''
-
     def RemovePunctuation(self, line):
         print line
         line.translate(None, ''.join(self.Punctuation))
