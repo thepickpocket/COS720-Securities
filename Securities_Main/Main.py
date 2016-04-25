@@ -21,6 +21,7 @@ def cleanupContent(data):
         text = Cleanup().RemoveLinks(text)
         text = Cleanup().RemoveMentions(text)
         text = Cleanup().RemoveStopWords(text)
+        text = Cleanup().RemovePunctuation(text)
 
         global DATA
         DATA = DATA + unicode(text)
@@ -61,8 +62,7 @@ while True:
         break
     elif input == '1':
         print("Creating word cloud from twitter content data...")
-        global DATA
-        WordCloud.CreateWordcloud(DATA, '../images/image.png')
+        WordCloud().CreateWordcloud(DATA, '../images/image.png')
         print("Word cloud created.")
     elif input == '2':
         print("Creating word cloud on locations..")
