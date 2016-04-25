@@ -79,7 +79,7 @@ while True:
         print("Complete.")
     elif input == '5':
         print("Generating the number of distinct twitter profiles...")
-        Statistics().distinctProfiles(db)
+        print("Number of Distinct profiles: " + Statistics().distinctProfiles(db))
         print("Complete.")
 
 dbClient.close()

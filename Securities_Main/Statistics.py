@@ -56,6 +56,6 @@ class Statistics:
         print(plt.plot(figure, filename='LocationSharingEnabled'))
 
     def distinctProfiles(self, database):
-         profiles = database['TwitterData'].distict("UserID")
-         distictProfiles_num = len(profiles)
+         profiles = database.TwitterData.distinct("UserID")
+         distictProfiles_num = str(len(profiles))
          return distictProfiles_num
