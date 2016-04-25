@@ -5,6 +5,7 @@
 from pymongo import MongoClient
 from DataCleanup import Cleanup
 from WordClouds import WordCloud
+from Statistics import Statistics
 
 DATA = unicode("")
 
@@ -32,8 +33,14 @@ def cleanupContent(data):
 
 def getLocations(data):
     locations = unicode("")
+    count = 0
     for tweet in data:
-        locations += tweet['Location'] ##TODO Just get the correct name of the column
+        location = Cleanup().ToLowercase(tweet['Location'])
+        if (location != unicode("")):
+            locations += unicode(" ") + unicode(location) + unicode(" ")
+        count += 1
+        if (count == 100):
+            break
     return locations
 
 ##Main implementation
@@ -44,9 +51,9 @@ collection = db['TwitterData']
 allData = collection.find({})
 
 cleanupContent(allData)
-WordCloud.CreateWordcloud(DATA)
-WordCloud.CreateWordcloud(getLocations(allData))
-
+WordCloud.CreateWordcloud(DATA, 'image.png')
+WordCloud().CreateWordcloud(getLocations(allData), 'locations.png')
+Statistics().languageStats(db)
 
 dbClient.close()
 
