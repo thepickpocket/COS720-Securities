@@ -54,7 +54,8 @@ while True:
     print("1. Create Content WordCloud")
     print("2. Create Location WordCloud")
     print("3. Create Location Bar Graph")
-    print("4. Generate Location Sharing Satistics")
+    print("4. Generate Location Sharing Statistics")
+    print("5. Generate number of distinct twitter profiles")
     print("Type X to exit.")
     input = Cleanup().ToLowercase(raw_input("Please choose an operation:"))
 
@@ -75,6 +76,10 @@ while True:
     elif input == '4':
         print("Generating statistics on location sharing of twitter posts...")
         Statistics().shareLocation(db)
+        print("Complete.")
+    elif input == '5':
+        print("Generating the number of distinct twitter profiles...")
+        Statistics().distinctProfiles(db)
         print("Complete.")
 
 dbClient.close()
