@@ -20,4 +20,4 @@ class StopWords:
         "you'll", "you're", "you've", "your", "yours", "yourself", "yourselves"
     ]
 
-    Punctuation = [".", "!", "?", ":", ";", ",", "-", "(", ")", "'", "\""]
+    Punctuation = [".", "!", "?", ":", ";", ",", "-", "(", ")", "'", '"']
