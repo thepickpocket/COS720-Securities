@@ -10,5 +10,5 @@ This class creates word cloud images from the data given.
 '''
 class WordCloud:
     def CreateWordcloud(self, data, title):
-        tags = make_tags(get_tag_counts(data), minsize=20, maxsize=120)
+        tags = make_tags(get_tag_counts(data))
         create_tag_image(tags, title, size=(900, 600), background=(0, 0, 0, 0), fontname='Lobster')

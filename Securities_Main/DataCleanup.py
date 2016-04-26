@@ -25,10 +25,17 @@ class Cleanup:
         return stripped(line)
 
     '''
+    ### Removing of punctuation ###
+    '''
+    def RemovePunctuation(self, line):
+        out = "".join(c for c in line if c not in StopWords().Punctuation)
+        return out
+
+    '''
     ### Changing all letters to lowercase letters ###
     '''
     def ToLowercase(self, line):
-        return line.lower()
+        return unicode(line).lower()
 
     '''
     ### Removing of URLs ###
@@ -62,6 +69,6 @@ class Cleanup:
     '''
     def RemoveStopWords(self, line):
         for word in StopWords.Words:
-            line = re.sub('\\b' + word + '\\b', '', line)
+            line = re.sub('\\b' + unicode(word) + '\\b', '', line)
             line = line.strip()
         return line
