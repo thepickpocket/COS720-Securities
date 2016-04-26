@@ -27,7 +27,7 @@ def cleanupContent(data):
         DATA = DATA + unicode(text)
 
         count = count + 1
-        if count == 50:
+        if count == 150:
             break
 
 def getLocations(data):
@@ -35,10 +35,11 @@ def getLocations(data):
     count = 0
     for tweet in data:
         location = Cleanup().ToLowercase(tweet['Location'])
+        location = Cleanup().NonPrintableChars(location)
         if (location != unicode("")):
             locations += unicode(" ") + unicode(location) + unicode(" ")
         count += 1
-        if (count == 100):
+        if (count == 1000):
             break
     return locations
 
@@ -50,14 +51,16 @@ allData = collection.find({})
 cleanupContent(allData)
 
 while True:
-    print("COS 720 Securities Practical: \n")
+    print("==========================================================")
+    print("COS 720 Securities Practical:")
+    print("==========================================================\n")
     print("1. Create Content WordCloud")
     print("2. Create Location WordCloud")
     print("3. Create Location Bar Graph")
     print("4. Generate Location Sharing Statistics")
     print("5. Generate number of distinct twitter profiles")
     print("Type X to exit.")
-    input = Cleanup().ToLowercase(raw_input("Please choose an operation:"))
+    input = Cleanup().ToLowercase(raw_input("Please choose an operation: "))
 
     if input == 'x':
         break

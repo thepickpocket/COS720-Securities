@@ -35,7 +35,7 @@ class Cleanup:
     ### Changing all letters to lowercase letters ###
     '''
     def ToLowercase(self, line):
-        return line.lower()
+        return unicode(line).lower()
 
     '''
     ### Removing of URLs ###
@@ -69,6 +69,6 @@ class Cleanup:
     '''
     def RemoveStopWords(self, line):
         for word in StopWords.Words:
-            line = re.sub('\\b' + word + '\\b', '', line)
+            line = re.sub('\\b' + unicode(word) + '\\b', '', line)
             line = line.strip()
         return line
