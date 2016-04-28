@@ -70,7 +70,7 @@ while True:
     elif input == '2':
         print("Seperating non retweets into collection TwitterDataNoRetweets...")
         for doc in allData:
-            Cleanup().SeperateRetweets(doc)
+            Cleanup().SeperateRetweets(db, collectionName)
         print("Complete.")
     elif input == '3':
         print("Creating word cloud from twitter content data...")

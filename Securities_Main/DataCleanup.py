@@ -77,10 +77,7 @@ class Cleanup:
     '''
     ### Seperation of Retweets ###
     '''
-    def SeperateRetweets(self, obj):
-        if obj['Retweet'] == 0:
-            dbClient = MongoClient()
-            db = dbClient['COS720']
-            collection = db['TwitterDataNoRetweets']
-            collection.insert_one(obj)
-            dbClient.close()
+    def SeperateRetweets(self, db, col):
+        allOriginal = db[col].find({"Retweet": 0})
+        collection = col + 'NoRetweets'
+        db[collection].insert(allOriginal)
