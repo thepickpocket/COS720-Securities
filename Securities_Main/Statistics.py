@@ -1,6 +1,3 @@
-import collections
-from DataCleanup import Cleanup
-from pymongo import MongoClient
 from bson.code import Code
 import plotly.plotly as plt
 import plotly.graph_objs as go
@@ -10,7 +7,7 @@ class Statistics:
         reducer = Code("""function(obj, prev){
                         prev.count++;
                     }""")
-        results = database.TwitterData.group(key={"Language":""}, condition="", initial={"count": 0}, reduce=reducer)
+        results = database.group(key={"Language":""}, condition="", initial={"count": 0}, reduce=reducer)
         base = list()
         values = list()
         for doc in results:
@@ -40,9 +37,9 @@ class Statistics:
         print plot_url
 
     def shareLocation(self, database):
-        allRecords = database.TwitterData.count()
-        sharesLocation = database.TwitterData.count(filter={"Geo_Enabled": 1})
-        doesNotShareLocation = database.TwitterData.count(filter={"Geo_Enabled": 0})
+        allRecords = database.count()
+        sharesLocation = database.count(filter={"Geo_Enabled": 1})
+        doesNotShareLocation = database.count(filter={"Geo_Enabled": 0})
 
         figure = {
             'data' : [{
@@ -56,6 +53,5 @@ class Statistics:
         print(plt.plot(figure, filename='LocationSharingEnabled'))
 
     def distinctProfiles(self, database):
-         profiles = database.TwitterData.distinct("UserID")
-         distictProfiles_num = str(len(profiles))
-         return distictProfiles_num
+        results = len(database.distinct("UserID"))
+        return results

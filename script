@@ -1,0 +1,21 @@
+if [ "$#" -ne 1 ] || ! [ -e "$1" ]; then
+  echo "Usage: $0 FILENAME DATABASENAME COLLECTIONNAME" >&2
+  exit 1
+fi
+
+newfile= processed_data.txt;
+
+echo "Converting file to UTF-8 encoding..."
+iconv -f latin1 -t utf-8 $1 > $newfile
+echo '"ID", "Content", "CreateDate", "Retweet", "RTID", "RTUsername", "OpenDate", "UserID", "Username", "Fullname", "Description", "Geo_Enabled", "Lat", "Long", "Location", "TimeZone", "Language", "Followers", "Friends", "RTFollowers", "Translator", "StatusCount", "ProfileImage", "BackgroundImage", "BannerImage", "IsFriend", "IsFollower", "IsDefaultProfile", "Size", "LastUpdated", "InReplyTo", "Source",' > /tmp/newfile
+cat $newfile >> /tmp/newfile
+cp /tmp/newfile $newfile
+
+echo "Executing proper character escaping..."
+sed -i '' s/'\\\"'/'\"\"'/g $newfile
+
+echo "Cleanining character escaping..."
+sed -i '' s/'\\\"\"'/\\\"/g $newfile
+
+echo "Reading into MongoDB Database..."
+mongoimport -d $2 -c $3 --type csv --file $newfile --headerline --numInsertionWorkers 8

@@ -7,15 +7,11 @@ from DataCleanup import Cleanup
 from WordClouds import WordCloud
 from Statistics import Statistics
 
-DATA = unicode("")
-
 ##Helper Functions
-def cleanupContent(data):
-    count = 0
-
+def cleanupContent(data, db):
     for tweet in data:
         content = tweet['Content']
-        text = Cleanup().HTMLCharEscaping(content)
+        text = Cleanup().HTMLCharEscaping(unicode(content))
         text = Cleanup().NonPrintableChars(text)
         text = Cleanup().ToLowercase(text)
         text = Cleanup().RemoveLinks(text)
@@ -23,12 +19,14 @@ def cleanupContent(data):
         text = Cleanup().RemoveMentions(text)
         text = Cleanup().RemoveStopWords(text)
 
-        global DATA
-        DATA = DATA + unicode(text)
-
-        count = count + 1
-        if count == 150:
-            break
+        db.update_one(
+            {'ID': tweet['ID']},
+            {
+                '$set':{
+                    'Content': text
+                }
+            }
+        )
 
 def getLocations(data):
     locations = unicode("")
@@ -45,44 +43,54 @@ def getLocations(data):
 
 ##Main implementation
 dbClient = MongoClient()
-db = dbClient['COS720']
-collection = db['TwitterData']
+dbName = raw_input("Please enter the name of the database to use: ")
+db = dbClient[dbName]
+collectionName = raw_input("Please enter the name of the collection to use: ")
+collection = db[collectionName]
 allData = collection.find({})
-cleanupContent(allData)
 
 while True:
     print("==========================================================")
     print("COS 720 Securities Practical:")
     print("==========================================================\n")
-    print("1. Create Content WordCloud")
-    print("2. Create Location WordCloud")
-    print("3. Create Location Bar Graph")
-    print("4. Generate Location Sharing Statistics")
-    print("5. Generate number of distinct twitter profiles")
+    print("1. Clean data in database")
+    print("2. Clean Retweets in database")
+    print("3. Create Content WordCloud")
+    print("4. Create Location WordCloud")
+    print("5. Create Location Bar Graph")
+    print("6. Generate Location Sharing Statistics")
+    print("7. Generate number of distinct twitter profiles")
     print("Type X to exit.")
     input = Cleanup().ToLowercase(raw_input("Please choose an operation: "))
 
     if input == 'x':
         break
     elif input == '1':
-        print("Creating word cloud from twitter content data...")
-        WordCloud().CreateWordcloud(DATA, '../images/image.png')
-        print("Word cloud created.")
+        cleanupContent(allData, collection)
     elif input == '2':
+        print("Seperating non retweets into collection TwitterDataNoRetweets...")
+        for doc in allData:
+            Cleanup().SeperateRetweets(doc)
+        print("Complete.")
+    elif input == '3':
+        print("Creating word cloud from twitter content data...")
+        WordCloud().CreateWordcloud(allData, '../images/image.png')
+        print("Word cloud created.")
+    elif input == '4':
         print("Creating word cloud on locations..")
         WordCloud().CreateWordcloud(getLocations(allData), '../images/locations.png')
         print("Word cloud created.")
-    elif input == '3':
-        print("Generating statistics on language of twitter posts...")
-        Statistics().languageStats(db)
-        print("Complete.")
-    elif input == '4':
-        print("Generating statistics on location sharing of twitter posts...")
-        Statistics().shareLocation(db)
-        print("Complete.")
     elif input == '5':
+        print("Generating statistics on language of twitter posts...")
+        Statistics().languageStats(collection)
+        print("Complete.")
+    elif input == '6':
+        print("Generating statistics on location sharing of twitter posts...")
+        Statistics().shareLocation(collection)
+        print("Complete.")
+    elif input == '7':
         print("Generating the number of distinct twitter profiles...")
-        print("Number of Distinct profiles: " + Statistics().distinctProfiles(db))
+        print("Number of Distinct profiles: " + str(Statistics().distinctProfiles(collection)))
         print("Complete.")
 
 dbClient.close()

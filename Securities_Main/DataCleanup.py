@@ -5,6 +5,7 @@
 import HTMLParser
 import re
 from StoppingWords import StopWords
+from pymongo import MongoClient
 
 class Cleanup:
     def __init__(self):
@@ -72,3 +73,14 @@ class Cleanup:
             line = re.sub('\\b' + unicode(word) + '\\b', '', line)
             line = line.strip()
         return line
+
+    '''
+    ### Seperation of Retweets ###
+    '''
+    def SeperateRetweets(self, obj):
+        if obj['Retweet'] == 0:
+            dbClient = MongoClient()
+            db = dbClient['COS720']
+            collection = db['TwitterDataNoRetweets']
+            collection.insert_one(obj)
+            dbClient.close()
