@@ -8,7 +8,8 @@ from WordClouds import WordCloud
 from Statistics import Statistics
 
 ##Helper Functions
-def cleanupContent(data, db):
+def cleanupContent(db):
+    data = db.find({})
     for tweet in data:
         content = tweet['Content']
         text = Cleanup().HTMLCharEscaping(unicode(content))
@@ -47,7 +48,6 @@ dbName = raw_input("Please enter the name of the database to use: ")
 db = dbClient[dbName]
 collectionName = raw_input("Please enter the name of the collection to use: ")
 collection = db[collectionName]
-allData = collection.find({})
 
 while True:
     print("==========================================================")
@@ -55,40 +55,44 @@ while True:
     print("==========================================================\n")
     print("1. Clean data in database")
     print("2. Clean Retweets in database")
-    print("3. Create Content WordCloud")
-    print("4. Create Location WordCloud")
-    print("5. Create Location Bar Graph")
-    print("6. Generate Location Sharing Statistics")
-    print("7. Generate number of distinct twitter profiles")
+    print("3. Score and remove bots")
+    print("4. Create Content WordCloud")
+    print("5. Create Location WordCloud")
+    print("6. Create Location Bar Graph")
+    print("7. Generate Location Sharing Statistics")
+    print("8. Generate number of distinct twitter profiles")
     print("Type X to exit.")
     input = Cleanup().ToLowercase(raw_input("Please choose an operation: "))
 
     if input == 'x':
         break
     elif input == '1':
-        cleanupContent(allData, collection)
+        cleanupContent(collection)
     elif input == '2':
         print("Seperating non retweets into collection TwitterDataNoRetweets...")
-        for doc in allData:
-            Cleanup().SeperateRetweets(db, collectionName)
+        Cleanup().SeperateRetweets(db, collectionName)
         print("Complete.")
     elif input == '3':
-        print("Creating word cloud from twitter content data...")
-        WordCloud().CreateWordcloud(allData, '../images/image.png')
-        print("Word cloud created.")
+        print("Tagging and removing bots...")
+        Cleanup().tagAndRemoveBots(collection, 0.3)
+        print("Complete.")
     elif input == '4':
-        print("Creating word cloud on locations..")
-        WordCloud().CreateWordcloud(getLocations(allData), '../images/locations.png')
+        print("Creating word cloud from twitter content data...")
+        WordCloud().CreateWordcloud(collection.find({}), '../images/image.png')
         print("Word cloud created.")
     elif input == '5':
+        print("Creating word cloud on locations..")
+        WordCloud().CreateWordcloud(getLocations(collection.find({})), '../images/locations.png')
+        print("Word cloud created.")
+    elif input == '6':
         print("Generating statistics on language of twitter posts...")
         Statistics().languageStats(collection)
         print("Complete.")
-    elif input == '6':
+    elif input == '7':
         print("Generating statistics on location sharing of twitter posts...")
         Statistics().shareLocation(collection)
         print("Complete.")
-    elif input == '7':
+    elif input == '8':
         print("Generating the number of distinct twitter profiles...")
         print("Number of Distinct profiles: " + str(Statistics().distinctProfiles(collection)))
         print("Complete.")

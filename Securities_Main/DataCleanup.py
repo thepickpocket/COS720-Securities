@@ -5,7 +5,6 @@
 import HTMLParser
 import re
 from StoppingWords import StopWords
-from pymongo import MongoClient
 
 class Cleanup:
     def __init__(self):
@@ -78,6 +77,14 @@ class Cleanup:
     ### Seperation of Retweets ###
     '''
     def SeperateRetweets(self, db, col):
-        allOriginal = db[col].find({"Retweet": 0})
+        allOriginal = db[col].find({"Retweet": 0}, {'_id': False})
+
         collection = col + 'NoRetweets'
-        db[collection].insert(allOriginal)
+        db[collection].insert_many(allOriginal)
+
+    def tagAndRemoveBots(self, db, threshold):
+        for doc in db.find({}):
+            if (doc['Friends'] == 0) and (doc['Followers'] > 0):
+                db.update_one({'_id': doc['_id']}, {'$set':{'BotScore': 0.5}})
+            else:
+                db.update_one({'_id': doc['_id']}, {'$set':{'BotScore': doc['Followers']/float(doc['Friends'])}})

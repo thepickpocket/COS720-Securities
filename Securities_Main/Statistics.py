@@ -55,3 +55,4 @@ class Statistics:
     def distinctProfiles(self, database):
         results = len(database.distinct("UserID"))
         return results
+
