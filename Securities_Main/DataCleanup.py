@@ -83,8 +83,13 @@ class Cleanup:
         db[collection].insert_many(allOriginal)
 
     def tagAndRemoveBots(self, db, threshold):
-        for doc in db.find({}):
+        collect = db.find({})
+        for doc in collect:
             if (doc['Friends'] == 0) and (doc['Followers'] > 0):
                 db.update_one({'_id': doc['_id']}, {'$set':{'BotScore': 0.5}})
             else:
                 db.update_one({'_id': doc['_id']}, {'$set':{'BotScore': doc['Followers']/float(doc['Friends'])}})
+        print("Done tagging, now removing suspected bots on threshold %f" % threshold)
+        db.delete_many({"BotScore": {'$lte': threshold}})
+
+        #print("Removed %i suspected bots." % deleteCount)
