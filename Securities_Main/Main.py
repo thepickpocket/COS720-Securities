@@ -20,11 +20,21 @@ def cleanupContent(db):
         text = Cleanup().RemoveMentions(text)
         text = Cleanup().RemoveStopWords(text)
 
+        content = tweet['Description']
+        desc = Cleanup().HTMLCharEscaping(unicode(content))
+        desc = Cleanup().NonPrintableChars(desc)
+        desc = Cleanup().ToLowercase(desc)
+        desc = Cleanup().RemoveLinks(desc)
+        desc = Cleanup().RemovePunctuation(desc)
+        desc = Cleanup().RemoveMentions(desc)
+        desc = Cleanup().RemoveStopWords(desc)
+
         db.update_one(
             {'ID': tweet['ID']},
             {
                 '$set':{
-                    'Content': text
+                    'Content': text,
+                    'Description': desc
                 }
             }
         )

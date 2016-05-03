@@ -77,10 +77,7 @@ class Cleanup:
     ### Seperation of Retweets ###
     '''
     def SeperateRetweets(self, db, col):
-        #allOriginal = db[col].find({"Retweet": 0}, {'_id': False})
-
         collection = col + 'NoRetweets'
-        #db[collection].insert_many(allOriginal)
         db[col].aggregate([
             {'$match': {'Retweet': 0}},
             {'$out': collection}
