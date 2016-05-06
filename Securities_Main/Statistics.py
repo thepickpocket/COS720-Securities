@@ -52,7 +52,28 @@ class Statistics:
 
         print(plt.plot(figure, filename='LocationSharingEnabled'))
 
+    '''
+    ### Counts the distinct profiles in the database
+    '''
     def distinctProfiles(self, database):
         results = len(database.distinct("UserID"))
         return results
 
+    '''
+    ### Calculate and present popular topics
+    '''
+    def getPopularTopics(self, database, collection, topicCount=3):
+        collectionName = "WordCount"
+        result = []
+        allRecords = database[collection].find({}, {'Content': 1, '_id':0})
+        for tweet in allRecords:
+            arr = tweet['Content'].split()
+            for word in arr:
+                if (database[collectionName].count({'Word': word}) > 0):
+                    database[collectionName].update_one({'Word': word}, {"$inc":{"Count": 1}})
+                else:
+                    database[collectionName].insert_one({"Word": word, "Count": 1})
+
+        result = list(database[collectionName].find({}, {'_id':0}).sort("Count", -1).limit(topicCount))
+
+        return result
