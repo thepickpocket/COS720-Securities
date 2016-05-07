@@ -62,7 +62,7 @@ class Statistics:
     '''
     ### Calculate and present popular topics
     '''
-    def getPopularTopics(self, database, collection, topicCount=3):
+    def getPopularTopics(self, database, collection, topicCount=5):
         collectionName = "WordCount"
         database[collectionName].drop()
         allRecords = database[collection].find({}, {'Content': 1, '_id':0})
@@ -76,4 +76,20 @@ class Statistics:
 
         result = list(database[collectionName].find({}, {'_id':0}).sort("Count", -1).limit(topicCount))
 
+        base = []
+        values = []
+        index = 0
+        for i in result:
+            base.append(i['Word'])
+            values.append(i['Count'])
+            index += 1
+
+        data = [
+            go.Bar(
+                x=base,
+                y=values
+            )
+        ]
+        plot_url = plt.plot(data, filename='Popular Topics (Words)')
+        print plot_url
         return result

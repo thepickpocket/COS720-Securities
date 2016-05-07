@@ -18,7 +18,8 @@ class StopWords:
         "we'd", "wed", "we'll", "well", "we're", "were", "we've", "weve", "were", "weren't", "werent", "what", "what's", "whats", "when", "when's", "whens", "where", "where's", "wheres",
         "which", "while", "who", "who's", "whos", "whom", "why", "why's", "whys", "with", "won't", "wont", "would", "wouldn't", "wouldnt", "you", "you'd", "youd",
         "you'll", "youll", "you're", "youre", "you've", "youve", "your", "yours", "yourself", "yourselves", "get", "via", "just",
-        "new", "like", "can", "day", "go", "see", "now", "will", "know", "got", "going", "getting"
+        "new", "like", "can", "day", "go", "see", "now", "will", "know", "got", "going", "getting", "one", "good", "u", "i", "want",
+        "much", "us", "come", "check", "first", "really", "say", "need", "make", "look"
     ]
 
     Punctuation = [".", "!", "?", ":", ";", ",", "-", "(", ")", "'", '"', '\\', '/', '&']
