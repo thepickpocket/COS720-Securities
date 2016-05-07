@@ -64,7 +64,7 @@ class Statistics:
     '''
     def getPopularTopics(self, database, collection, topicCount=3):
         collectionName = "WordCount"
-        result = []
+        database[collectionName].drop()
         allRecords = database[collection].find({}, {'Content': 1, '_id':0})
         for tweet in allRecords:
             arr = tweet['Content'].split()
