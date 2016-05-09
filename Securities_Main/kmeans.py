@@ -1,0 +1,1 @@
+# Using https://github.com/FindKim/Jaccard-K-Means/blob/master/k-means.py as an example implementation
