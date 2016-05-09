@@ -1,6 +1,7 @@
 from bson.code import Code
 import plotly.plotly as plt
 import plotly.graph_objs as go
+from WordClouds import WordCloud
 
 class Statistics:
     def languageStats(self, database):
@@ -62,7 +63,7 @@ class Statistics:
     '''
     ### Calculate and present popular topics
     '''
-    def getPopularTopics(self, database, collection, topicCount=5):
+    def getPopularTopics(self, database, collection, topicCount=10):
         collectionName = "WordCount"
         database[collectionName].drop()
         allRecords = database[collection].find({}, {'Content': 1, '_id':0})
@@ -93,3 +94,24 @@ class Statistics:
         plot_url = plt.plot(data, filename='Popular Topics (Words)')
         print plot_url
         return result
+
+    '''
+    ### Calculate and present popular hastags
+    '''
+    def getPopularHashtags(self, database, topicCount = 10):
+        hashtags = list(database["WordCount"].find({"Word": {"$regex": '^#'}}, {'_id':0}).sort("Count", -1).limit(topicCount))
+        base = list()
+        values = list()
+        for tag in hashtags:
+            base.append(tag["Word"])
+            values.append(tag["Count"])
+        #WordCloud().CreateWordcloud(base, "Hashtags.png")
+
+        data = [
+            go.Bar(
+                x=base,
+                y=values
+            )
+        ]
+        plot_url = plt.plot(data, filename='Popular Hashtags')
+        print plot_url

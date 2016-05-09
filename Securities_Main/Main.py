@@ -72,6 +72,7 @@ while True:
     print("7. Generate Location Sharing Statistics")
     print("8. Generate number of distinct twitter profiles")
     print("9. Calculate trending topics")
+    print("10. Calculate trending hashtags")
     print("Type X to exit.")
     input = Cleanup().ToLowercase(raw_input("Please choose an operation: "))
 
@@ -110,6 +111,10 @@ while True:
     elif input == '9':
         print("Calculating popular topics (Trending topics)")
         arr = Statistics().getPopularTopics(db, collectionName)
+        print(arr)
+    elif input == '10':
+        print("Calculating popular Hashtags")
+        arr = Statistics().getPopularHashtags(db)
         print(arr)
 
 dbClient.close()
