@@ -6,6 +6,7 @@ from pymongo import MongoClient
 from DataCleanup import Cleanup
 from WordClouds import WordCloud
 from Statistics import Statistics
+from ImageAnalysis import ImageAnalysis
 
 ##Helper Functions
 def cleanupContent(db):
@@ -24,10 +25,6 @@ def cleanupContent(db):
         desc = Cleanup().HTMLCharEscaping(unicode(content))
         desc = Cleanup().NonPrintableChars(desc)
         desc = Cleanup().ToLowercase(desc)
-        desc = Cleanup().RemoveLinks(desc)
-        desc = Cleanup().RemovePunctuation(desc)
-        desc = Cleanup().RemoveMentions(desc)
-        desc = Cleanup().RemoveStopWords(desc)
 
         db.update_one(
             {'ID': tweet['ID']},
@@ -73,6 +70,7 @@ while True:
     print("8. Generate number of distinct twitter profiles")
     print("9. Calculate trending topics")
     print("10. Calculate trending hashtags")
+    print("11. Check Profile Images")
     print("Type X to exit.")
     input = Cleanup().ToLowercase(raw_input("Please choose an operation: "))
 
@@ -116,6 +114,12 @@ while True:
         print("Calculating popular Hashtags")
         arr = Statistics().getPopularHashtags(db)
         print(arr)
+    elif input == '11':
+        img = ImageAnalysis()
+        print("Getting Profile Images Into Database...")
+        img.getAccountsWithProfilePics(db, collectionName)
+        print("Checking and tagging different profile pictures")
+        print("Complete.")
 
 dbClient.close()
 
