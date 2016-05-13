@@ -24,9 +24,6 @@ def cleanupContent(db):
         desc = Cleanup().HTMLCharEscaping(unicode(content))
         desc = Cleanup().NonPrintableChars(desc)
         desc = Cleanup().ToLowercase(desc)
-        desc = Cleanup().RemoveLinks(desc)
-        desc = Cleanup().RemovePunctuation(desc)
-        desc = Cleanup().RemoveMentions(desc)
         desc = Cleanup().RemoveStopWords(desc)
 
         db.update_one(
