@@ -4,6 +4,10 @@ import plotly.graph_objs as go
 from WordClouds import WordCloud
 
 class Statistics:
+    THRESHOLD = 1500
+    AVERAGE_FRIENDS = 0
+    AVERAGE_FOLLOWERS = 0
+
     def languageStats(self, database):
         reducer = Code("""function(obj, prev){
                         prev.count++;
@@ -105,7 +109,7 @@ class Statistics:
         for tag in hashtags:
             base.append(tag["Word"])
             values.append(tag["Count"])
-        #WordCloud().CreateWordcloud(base, "Hashtags.png")
+        WordCloud().CreateWordcloud(base, "Hashtags.png")
 
         data = [
             go.Bar(
@@ -115,3 +119,46 @@ class Statistics:
         ]
         plot_url = plt.plot(data, filename='Popular Hashtags')
         print plot_url
+        return
+
+    def setAverageFriendsFollowers(self, database):
+        result = list(database.aggregate([{
+            "$group":
+                {
+                    "_id": None,
+                    "avgFriends": {"$avg": "$Friends"},
+                    "avgFollowers": {"$avg": "$Followers"}
+                }
+        }]))
+        self.AVERAGE_FRIENDS = result[0]["avgFriends"]
+        self.AVERAGE_FOLLOWERS = result[0]["avgFollowers"]
+        return
+
+    def setDeceptionScores(self, database):
+        self.setAverageFriendsFollowers(database)
+        data = list(database.find({}))
+
+        for tweet in data:
+            score = 100
+            if (tweet["Followers"] > (self.AVERAGE_FOLLOWERS + self.THRESHOLD) or tweet["Followers"] < (self.AVERAGE_FOLLOWERS - self.THRESHOLD)):
+                score -= 10
+            if (tweet["Friends"] > (self.AVERAGE_FRIENDS + self.THRESHOLD) or tweet["Friends"] < (self.AVERAGE_FRIENDS - self.THRESHOLD)):
+                score -= 10
+            if (tweet["Description"] == ""):
+                score -= 25
+            if (tweet["Followers"] >= 2001 and tweet["Friends"] < 2000):
+                score -= 25
+            if (tweet["IsDefaultProfile"] == 0):
+                score -= 10
+
+            database.update_one({"_id": tweet["_id"]}, {"$set": {"DeceptionScore": (100-score)}})
+
+        self.getDeceptions(database)
+        return
+
+    def getDeceptions(self, database, limit=10):
+        result = list(database.find({}).limit(limit))
+        for res in result:
+            seq = (res["Username"] , "     " , str(res["StatusCount"]) , "     " , str(res["DeceptionScore"]))
+            print("".join(seq))
+        return
