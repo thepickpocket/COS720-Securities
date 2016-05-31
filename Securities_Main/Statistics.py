@@ -136,22 +136,32 @@ class Statistics:
 
     def setDeceptionScores(self, database):
         self.setAverageFriendsFollowers(database)
-        data = list(database.find({}))
+        users = list(database.distinct("UserID"))
 
-        for tweet in data:
-            score = 100
-            if (tweet["Followers"] > (self.AVERAGE_FOLLOWERS + self.THRESHOLD) or tweet["Followers"] < (self.AVERAGE_FOLLOWERS - self.THRESHOLD)):
-                score -= 10
-            if (tweet["Friends"] > (self.AVERAGE_FRIENDS + self.THRESHOLD) or tweet["Friends"] < (self.AVERAGE_FRIENDS - self.THRESHOLD)):
-                score -= 10
-            if (tweet["Description"] == ""):
-                score -= 25
-            if (tweet["Followers"] >= 2001 and tweet["Friends"] < 2000):
-                score -= 25
-            if (tweet["IsDefaultProfile"] == 0):
-                score -= 10
+        for user in users:
+            user = int(round(user))
+            userTweets = list(database.find({"UserID": user}))
+            score = 0
+            if (userTweets[0]["Followers"] > (self.AVERAGE_FOLLOWERS + self.THRESHOLD) or userTweets[0]["Followers"] < (
+                self.AVERAGE_FOLLOWERS - self.THRESHOLD)):
+                score += 10
+            if (userTweets[0]["Friends"] > (self.AVERAGE_FRIENDS + self.THRESHOLD) or userTweets[0]["Friends"] < (
+                self.AVERAGE_FRIENDS - self.THRESHOLD)):
+                score += 10
+            if (userTweets[0]["Description"] == ""):
+                score += 25
+            if (userTweets[0]["Followers"] >= 2001 and userTweets[0]["Friends"] < 2000):
+                score += 25
+            if (userTweets[0]["IsDefaultProfile"] == 0):
+                score += 5
+            uniqueTweets = len(list(database.distinct("Content", {"UserID": user})))
+            if not uniqueTweets == len(userTweets):
+                score += (len(userTweets)-uniqueTweets)*2
+            for tweet in userTweets:
+                if tweet["Content"] == "":
+                    score += 1
 
-            database.update_one({"_id": tweet["_id"]}, {"$set": {"DeceptionScore": (100-score)}})
+            database.update_one({"_id": user}, {"$set": {"DeceptionScore": score}})
 
         self.getDeceptions(database)
         return
