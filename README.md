@@ -36,5 +36,6 @@ The following techniques were used to extract the given data from a csv file int
 5. isFriend/isFollower
 
 ## Experimentation of Data
-1. Copy from existing database 'TwitterData' using mongodb command <code>db.TwitterData.copyTo('NewCollectionName')</code>
-2. Remove Redundant Columbs with <code>db.domain.update({},{$unset: {columnName:1}},{multi: true})</code>
+1. A smaller database of the same data was used to test the data. Using MongoDB the Test collection was created by using the following mongo command <code>db.Test.insert((db.TwitterDataMediumNoRetweets.find({}, {'_id':0}).limit(10)).toArray())</code>
+2. Copy from existing database 'TwitterData' using mongodb command <code>db.TwitterData.copyTo('NewCollectionName')</code>
+3. Remove Redundant Columbs with <code>db.domain.update({},{$unset: {columnName:1}},{multi: true})</code>

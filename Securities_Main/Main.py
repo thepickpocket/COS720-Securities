@@ -6,16 +6,14 @@ from pymongo import MongoClient
 from DataCleanup import Cleanup
 from WordClouds import WordCloud
 from Statistics import Statistics
-
-DATA = unicode("")
+from kmeansImp import KMeans
 
 ##Helper Functions
-def cleanupContent(data):
-    count = 0
-
+def cleanupContent(db):
+    data = db.find({})
     for tweet in data:
         content = tweet['Content']
-        text = Cleanup().HTMLCharEscaping(content)
+        text = Cleanup().HTMLCharEscaping(unicode(content))
         text = Cleanup().NonPrintableChars(text)
         text = Cleanup().ToLowercase(text)
         text = Cleanup().RemoveLinks(text)
@@ -23,12 +21,21 @@ def cleanupContent(data):
         text = Cleanup().RemoveMentions(text)
         text = Cleanup().RemoveStopWords(text)
 
-        global DATA
-        DATA = DATA + unicode(text)
+        content = tweet['Description']
+        desc = Cleanup().HTMLCharEscaping(unicode(content))
+        desc = Cleanup().NonPrintableChars(desc)
+        desc = Cleanup().ToLowercase(desc)
+        desc = Cleanup().RemoveStopWords(desc)
 
-        count = count + 1
-        if count == 150:
-            break
+        db.update_one(
+            {'ID': tweet['ID']},
+            {
+                '$set':{
+                    'Content': text,
+                    'Description': desc
+                }
+            }
+        )
 
 def getLocations(data):
     locations = unicode("")
@@ -45,45 +52,79 @@ def getLocations(data):
 
 ##Main implementation
 dbClient = MongoClient()
-db = dbClient['COS720']
-collection = db['TwitterData']
-allData = collection.find({})
-cleanupContent(allData)
+dbName = raw_input("Please enter the name of the database to use: ")
+db = dbClient[dbName]
+collectionName = raw_input("Please enter the name of the collection to use: ")
+collection = db[collectionName]
 
 while True:
     print("==========================================================")
     print("COS 720 Securities Practical:")
     print("==========================================================\n")
-    print("1. Create Content WordCloud")
-    print("2. Create Location WordCloud")
-    print("3. Create Location Bar Graph")
-    print("4. Generate Location Sharing Statistics")
-    print("5. Generate number of distinct twitter profiles")
+    print("1. Clean data in database")
+    print("2. Clean Retweets in database")
+    print("3. Score and remove bots")
+    print("4. Create Content WordCloud")
+    print("5. Create Location WordCloud")
+    print("6. Create Location Bar Graph")
+    print("7. Generate Location Sharing Statistics")
+    print("8. Generate number of distinct twitter profiles")
+    print("9. Calculate trending topics")
+    print("10. Calculate trending hashtags")
+    print("11. Tag and identify possible deception")
+    print("12. Do K-Mean Clustering")
     print("Type X to exit.")
     input = Cleanup().ToLowercase(raw_input("Please choose an operation: "))
 
     if input == 'x':
         break
     elif input == '1':
-        print("Creating word cloud from twitter content data...")
-        WordCloud().CreateWordcloud(DATA, '../images/image.png')
-        print("Word cloud created.")
+        cleanupContent(collection)
     elif input == '2':
-        print("Creating word cloud on locations..")
-        WordCloud().CreateWordcloud(getLocations(allData), '../images/locations.png')
-        print("Word cloud created.")
+        print("Seperating non retweets into collection TwitterDataNoRetweets...")
+        Cleanup().SeperateRetweets(db, collectionName)
+        print("Complete.")
     elif input == '3':
-        print("Generating statistics on language of twitter posts...")
-        Statistics().languageStats(db)
+        print("Tagging and removing bots...")
+        Cleanup().tagAndRemoveBots(collection, 0.3)
         print("Complete.")
     elif input == '4':
-        print("Generating statistics on location sharing of twitter posts...")
-        Statistics().shareLocation(db)
-        print("Complete.")
+        print("Creating word cloud from twitter content data...")
+        WordCloud().CreateWordcloud(collection.find({}), '../images/image.png')
+        print("Word cloud created.")
     elif input == '5':
-        print("Generating the number of distinct twitter profiles...")
-        print("Number of Distinct profiles: " + Statistics().distinctProfiles(db))
+        print("Creating word cloud on locations..")
+        WordCloud().CreateWordcloud(getLocations(collection.find({})), '../images/locations.png')
+        print("Word cloud created.")
+    elif input == '6':
+        print("Generating statistics on language of twitter posts...")
+        Statistics().languageStats(collection)
         print("Complete.")
+    elif input == '7':
+        print("Generating statistics on location sharing of twitter posts...")
+        Statistics().shareLocation(collection)
+        print("Complete.")
+    elif input == '8':
+        print("Generating the number of distinct twitter profiles...")
+        print("Number of Distinct profiles: " + str(Statistics().distinctProfiles(collection)))
+        print("Complete.")
+    elif input == '9':
+        print("Calculating popular topics (Trending topics)")
+        arr = Statistics().getPopularTopics(db, collectionName)
+        print(arr)
+    elif input == '10':
+        print("Calculating popular Hashtags")
+        arr = Statistics().getPopularHashtags(db)
+        print(arr)
+    elif input == '11':
+        print("Scoring of deception profiles")
+        Statistics().setDeceptionScores(collection)
+        print("Displaying of deception profiles")
+    elif input == '12':
+        print("Doing K-Means Clustering")
+        KMeans = KMeans(collection, K=4)
+        clusters = KMeans.cluster()
+        KMeans.plotClusters(clusters)
 
 dbClient.close()
 

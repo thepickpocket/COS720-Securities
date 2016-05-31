@@ -72,3 +72,26 @@ class Cleanup:
             line = re.sub('\\b' + unicode(word) + '\\b', '', line)
             line = line.strip()
         return line
+
+    '''
+    ### Seperation of Retweets ###
+    '''
+    def SeperateRetweets(self, db, col):
+        collection = col + 'NoRetweets'
+        db[col].aggregate([
+            {'$match': {'Retweet': 0}},
+            {'$out': collection}
+        ])
+
+    '''
+    ### Tags and removes BOTS
+    '''
+    def tagAndRemoveBots(self, db, threshold):
+        collect = db.find({})
+        for doc in collect:
+            if (float(doc['Friends']) == 0) and (doc['Followers'] > 0):
+                db.update_one({'_id': doc['_id']}, {'$set':{'BotScore': 0.5}})
+            else:
+                db.update_one({'_id': doc['_id']}, {'$set':{'BotScore': doc['Followers']/float(doc['Friends'])}})
+        print("Done tagging, now removing suspected bots on threshold %f" % threshold)
+        db.delete_many({"BotScore": {'$lte': threshold}})
