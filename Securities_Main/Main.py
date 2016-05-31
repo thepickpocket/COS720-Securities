@@ -24,9 +24,6 @@ def cleanupContent(db):
         desc = Cleanup().HTMLCharEscaping(unicode(content))
         desc = Cleanup().NonPrintableChars(desc)
         desc = Cleanup().ToLowercase(desc)
-        desc = Cleanup().RemoveLinks(desc)
-        desc = Cleanup().RemovePunctuation(desc)
-        desc = Cleanup().RemoveMentions(desc)
         desc = Cleanup().RemoveStopWords(desc)
 
         db.update_one(
@@ -73,6 +70,7 @@ while True:
     print("8. Generate number of distinct twitter profiles")
     print("9. Calculate trending topics")
     print("10. Calculate trending hashtags")
+    print("11. Tag and identify possible deception")
     print("Type X to exit.")
     input = Cleanup().ToLowercase(raw_input("Please choose an operation: "))
 
@@ -116,6 +114,10 @@ while True:
         print("Calculating popular Hashtags")
         arr = Statistics().getPopularHashtags(db)
         print(arr)
+    elif input == '11':
+        print("Scoring of deception profiles")
+        Statistics().setDeceptionScores(collection)
+        print("Displaying of deception profiles")
 
 dbClient.close()
 
