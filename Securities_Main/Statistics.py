@@ -2,7 +2,6 @@ from bson.code import Code
 import plotly.plotly as plt
 import plotly.graph_objs as go
 from WordClouds import WordCloud
-
 class Statistics:
     THRESHOLD = 1500
     AVERAGE_FRIENDS = 0
@@ -149,7 +148,7 @@ class Statistics:
                 self.AVERAGE_FRIENDS - self.THRESHOLD)):
                 score += 10
             if (userTweets[0]["Description"] == ""):
-                score += 25
+                score += 15
             if (userTweets[0]["Followers"] >= 2001 and userTweets[0]["Friends"] < 2000):
                 score += 25
             if (userTweets[0]["IsDefaultProfile"] == 0):
