@@ -6,6 +6,7 @@ from pymongo import MongoClient
 from DataCleanup import Cleanup
 from WordClouds import WordCloud
 from Statistics import Statistics
+from kmeansImp import KMeans
 
 ##Helper Functions
 def cleanupContent(db):
@@ -71,6 +72,7 @@ while True:
     print("9. Calculate trending topics")
     print("10. Calculate trending hashtags")
     print("11. Tag and identify possible deception")
+    print("12. Do K-Mean Clustering")
     print("Type X to exit.")
     input = Cleanup().ToLowercase(raw_input("Please choose an operation: "))
 
@@ -118,6 +120,11 @@ while True:
         print("Scoring of deception profiles")
         Statistics().setDeceptionScores(collection)
         print("Displaying of deception profiles")
+    elif input == '12':
+        print("Doing K-Means Clustering")
+        KMeans = KMeans(collection, K=4)
+        clusters = KMeans.cluster()
+        KMeans.plotClusters(clusters)
 
 dbClient.close()
 
